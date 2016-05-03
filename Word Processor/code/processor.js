@@ -27,29 +27,29 @@ var controls = Object.create(null);
 
 function createProcessor(parent)
 {
-	var canvas = device("textarea", {width: 1000, height: 1000});
-	var canvas_style = canvas.getContext("2d");
+	var textarea = device("textarea", {width: 1000, height: 1000});
+	var textarea_style = textarea.getContext("2d");
 	var toolbar = device("div", {class: "toolbar"});
 	for(var name in controls)
 	{
-		toolbar.appendChild(controls[name](canvas_style));
+		toolbar.appendChild(controls[name](textarea_style));
 	}
-	var panel = device("div", {class: "picturepanel"}, canvas);
+	var panel = device("div", {class: "picturepanel"}, textarea);
 	parent.appendChild(device("div", null, panel, toolbar));
 }
 
 var tools = Object.create(null);
 
-controls.file = function(canvas_style) {
+controls.file = function(textarea_style) {
 	var select = device("select");
 	for(var name in tools)
 	{
 		select.appendChild(device("option", null, name));
 	}
-	canvas_style.canvas.addEventListener("mousedown", function(event) {
+	textarea_style.textarea.addEventListener("mousedown", function(event) {
 		if(event.which == 1)
 		{
-			tools[select.value](event, canvas_style);
+			tools[select.value](event, textarea_style);
 			event.preventDefault();
 		}
 	});
@@ -61,11 +61,11 @@ tools.New = function(element) {
 	element.value = '';
 };
 
-tools.Save = function(canvas_style) {
+tools.Save = function(textarea_style) {
 	var link = device("select");
 	function update() {
 		try {
-			link.href = canvas_style.canvas.toDataUrl();
+			link.href = textarea_style.textarea.toDataUrl();
 		} catch(e) {
 			if(e instanceof SecurityError)
 			{
